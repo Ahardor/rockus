@@ -60,7 +60,8 @@ flutter:
   uses-material-design: true
 
   assets:
-      - assets/img/
+      - assets/img/bubble.png
+      - assets/img/Webinfo.png
       - assets/
 
   # To add assets to your application, add an assets section, like this:
