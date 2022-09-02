@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:relative_scale/relative_scale.dart';
 import 'package:rockus/colors.dart';
@@ -31,6 +31,7 @@ class _ThirdPageState extends State<ThirdPage>
 
   double curLocX = 0, curLocY = 0;
   double startLocX = 0, startLocY = 0;
+  double endLocX = 0, endLocY = 0;
 
   double curHeight = 0, curWidth = 0;
 
@@ -44,7 +45,12 @@ class _ThirdPageState extends State<ThirdPage>
 
     animation = Tween<double>(begin: h, end: 0).animate(controller)
       ..addListener(() {
-        setState(() {});
+        setState(() {
+          curLocX = endLocX * controller.value;
+          curLocY = endLocY * controller.value;
+          curHeight = (curLocY - startLocY) * controller.value;
+          curWidth = (curLocX - startLocX) * controller.value;
+        });
       });
 
     animationWidth =
@@ -59,7 +65,13 @@ class _ThirdPageState extends State<ThirdPage>
             setState(() {});
           });
 
-    controller.forward();
+    controller.forward().whenComplete(() {
+      html.window.open('https://rockus.su/museum', 'new tab');
+      html.window.onFocus.listen((event) {
+        controller.reverse();
+        widget.switchPage(0);
+      });
+    });
   }
 
   @override
@@ -71,9 +83,12 @@ class _ThirdPageState extends State<ThirdPage>
   @override
   Widget build(BuildContext context) {
     Widget bubble = Container(
-      color: Colors.lightBlue,
-      height: curHeight,
-      width: curWidth,
+      height: curHeight > 0 ? curHeight : 0,
+      width: curWidth > 0 ? curWidth : 0,
+      child: const Image(
+        image: AssetImage('assets/img/bubble.png'),
+        fit: BoxFit.contain,
+      ),
     );
 
     return RelativeBuilder(builder: (context, height, width, sy, sx) {
@@ -101,6 +116,8 @@ class _ThirdPageState extends State<ThirdPage>
               },
               onPanEnd: (details) {
                 if (curHeight * curWidth > width * height / 2) {
+                  endLocX = curLocX;
+                  endLocY = curLocY;
                   controller.reverse();
                   widget.switchPage(0);
                 } else {
@@ -125,6 +142,14 @@ class _ThirdPageState extends State<ThirdPage>
                               color: Colors.black.withOpacity(0.0)),
                         ),
                       ),
+                    ),
+                  ),
+                  Container(
+                    height: height * controller.value,
+                    width: width * controller.value,
+                    child: const Image(
+                      fit: BoxFit.contain,
+                      image: AssetImage('assets/img/museum.png'),
                     ),
                   ),
                   Positioned(

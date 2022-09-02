@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
           break;
         case 2:
-          _newPage = SecondPage(
+          _newPage = ThirdPage(
             key: UniqueKey(),
             top: top,
             left: left,

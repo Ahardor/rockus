@@ -66,7 +66,7 @@ class _SecondPageState extends State<SecondPage>
           });
 
     controller.forward().whenComplete(() {
-      html.window.open('https://alexberserker.github.io/WebInfo/', 'new tab');
+      html.window.open('https://rockus.su/webinfo', 'new tab');
       html.window.onFocus.listen((event) {
         controller.reverse();
         widget.switchPage(0);
